@@ -179,19 +179,23 @@ package {
 			var
 				pdf:PDF,
 				i:int, iLen:int,
-				splitText:Array    = clipText.split("--/TableToolsOpts--\n"),
-				opts:Array         = splitText[0].split("\n"),
-				dataIn:Array       = splitText[1].split("\n"),
-				aColRatio:Array    = getProp( 'colWidth', opts ).split('\t'),
-				title:String       = getProp( 'title', opts ),
-				message:String     = getProp( 'message', opts ),
-				orientation:String = getProp( 'orientation', opts ),
-				size:String        = getProp( 'size', opts ),
-				iPageWidth:int     = 0,
-				dataOut:Array      = [],
-				columns:Array      = [],
+				splitText:Array    		= clipText.split("--/TableToolsOpts--\n"),
+				opts:Array         		= splitText[0].split("\n"),
+				dataIn:Array       		= splitText[1].split("\n"),
+				aColRatio:Array    		= getProp( 'colWidth', opts ).split('\t'),
+				title:String       		= getProp( 'title', opts ),
+				message:String     		= getProp( 'message', opts ),
+				orientation:String 		= getProp( 'orientation', opts ),
+				size:String        		= getProp( 'size', opts ),
+				titleFontSize:int		= int(getProp( 'titleFontSize', opts )),
+				subTitleFontSize:int	= int(getProp( 'subTitleFontSize', opts )),
+				tableFontSize:int		= int(getProp( 'tableFontSize', opts )),
+				iPageWidth:int     		= 0,
+				dataOut:Array      		= [],
+				columns:Array      		= [],
 				headers:Array,
 				y:int = 0;
+
 			
 			/* Create the PDF */
 			pdf = new PDF( Orientation[orientation.toUpperCase()], Unit.MM, Size[size.toUpperCase()] );
@@ -201,17 +205,19 @@ package {
 			pdf.textStyle( new RGBColor(0), 1 );
 			
 			/* Add the title / message if there is one */
-			pdf.setFont( new CoreFont(FontFamily.HELVETICA), 14 );
+			pdf.setFont( new CoreFont(FontFamily.HELVETICA), titleFontSize );
 			if ( title != "" )
 			{
 				pdf.writeText(11, title+"\n");
 			}
 			
-			pdf.setFont( new CoreFont(FontFamily.HELVETICA), 11 );
+			pdf.setFont( new CoreFont(FontFamily.HELVETICA), subTitleFontSize );
 			if ( message != "" )
 			{
 				pdf.writeText(11, message+"\n");
 			}
+
+			pdf.setFont( new CoreFont(FontFamily.HELVETICA), tableFontSize );
 			
 			/* Data setup. Split up the headers, and then construct the columns */
 			for ( i=0, iLen=dataIn.length ; i<iLen ; i++ )
